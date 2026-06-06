@@ -7,6 +7,10 @@
 #include <errno.h>
 #include <unistd.h>
 
+
+#define MAX_DATA_SIZE 1024
+
+
 int main(int argc, char* argv[]) {
 	// Disable output buffering
 	setbuf(stdout, NULL);
@@ -54,8 +58,34 @@ int main(int argc, char* argv[]) {
 
     int client_fd = accept(server_fd, (struct sockaddr *) &client_addr, &client_addr_len);
 	printf("Client connected\n");
-	close(client_fd);
 	
+	
+	typedef union 
+	{
+		struct {
+			uint32_t message_size;
+			uint32_t correlation_id;
+		} parts;
+		uint64_t message_header;
+	} response_header_v0_t;
+	
+	char buffer[MAX_DATA_SIZE] = {0};
+
+	if(read(client_fd, buffer, MAX_DATA_SIZE - 1) < 0){
+		printf("Reading from client_fd failed");
+		return 1;
+	}
+	
+	response_header_v0_t response;
+	response.parts.message_size   = htonl(0);
+	response.parts.correlation_id = htonl(7);
+
+	if(send(client_fd, &response.message_header, sizeof(response.message_header), 0) < 0){
+		printf("Sending to client failed");
+		return 1;
+	}
+	
+	close(client_fd);
 	close(server_fd);
 	return 0;
 }
