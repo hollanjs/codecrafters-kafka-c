@@ -68,7 +68,7 @@ response_header_v2_t v2_response_header_new(uint32_t message_size,
 }
 
 // void *memcpy(void dest[restrict .n], const void src[restrict .n],size_t n);
-response_header_v2_t v2_response_header_from_64byte_request(const uint8_t[] request)
+response_header_v2_t v2_response_header_from_64byte_request(const uint8_t *request)
 {
     response_header_v2_t v2_response_header;
     int _offset = 0;
