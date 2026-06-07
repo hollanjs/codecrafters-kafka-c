@@ -71,7 +71,11 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	printf("sizeof(buffer): %d", sizeof(buffer));
+	for (size_t i = 0; i < MAX_DATA_SIZE; i++)
+	{
+		printf("%02X ", buffer[i]);
+	}
+	printf("\n");
 
 	// response_header_v2_t response = v2_response_header_from_64byte_request(buffer);
 	// v2_response_header_hton(&response);
