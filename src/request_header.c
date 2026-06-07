@@ -72,6 +72,7 @@ response_header_v2_t v2_response_header_from_64byte_request(const uint8_t *reque
 {
     response_header_v2_t v2_response_header;
     int _offset = 0;
+    // const uint8_t *requestLE = nto
 
     memcpy(&(v2_response_header.message_size), request, sizeof(v2_response_header.message_size));
     _offset += sizeof(v2_response_header.message_size);
@@ -84,7 +85,7 @@ response_header_v2_t v2_response_header_from_64byte_request(const uint8_t *reque
 
     memcpy(&(v2_response_header.request_api_version), request, sizeof(v2_response_header.request_api_version));
 
-    v2_response_header_ntoh(&v2_response_header);
+    // v2_response_header_ntoh(&v2_response_header);
     return v2_response_header;
 }
 
