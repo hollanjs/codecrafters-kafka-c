@@ -54,7 +54,8 @@ response_header_v2_t v2_response_header_new(uint32_t message_size,
                                             uint32_t correlation_id,
                                             uint16_t request_api_key,
                                             uint16_t request_api_version);
-response_header_v2_t v2_response_header_from_64byte_request(uint8_t[] request);
+
+response_header_v2_t v2_response_header_from_64byte_request(uint8_t *request);
 
 void v2_response_header_hton(response_header_v2_t *header);
 void v2_response_header_ntoh(response_header_v2_t *header);
