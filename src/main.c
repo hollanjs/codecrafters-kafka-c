@@ -71,13 +71,15 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	response_header_v2_t response = v2_response_header_from_64byte_request(buffer);
-	v2_response_header_hton(&response);
-	if (send(client_fd, &response.correlation_id, sizeof(response.correlation_id), 0) < 0)
-	{
-		printf("Sending to client failed");
-		return 1;
-	}
+	printf("sizeof(buffer): %d", sizeof(buffer));
+
+	// response_header_v2_t response = v2_response_header_from_64byte_request(buffer);
+	// v2_response_header_hton(&response);
+	// if (send(client_fd, &response.correlation_id, sizeof(response.correlation_id), 0) < 0)
+	// {
+	// 	printf("Sending to client failed");
+	// 	return 1;
+	// }
 
 	close(client_fd);
 	close(server_fd);
