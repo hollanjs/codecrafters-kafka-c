@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 
 	response_header_v2_t response = v2_response_header_from_64byte_request(buffer);
 	v2_response_header_hton(&response);
-	if (send(client_fd, &response.correlation_id, sizeof(response.header_v0.message_header), 0) < 0)
+	if (send(client_fd, &response.correlation_id, sizeof(response.correlation_id), 0) < 0)
 	{
 		printf("Sending to client failed");
 		return 1;
