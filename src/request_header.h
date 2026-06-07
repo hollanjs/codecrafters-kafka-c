@@ -60,3 +60,5 @@ response_header_v2_t v2_response_header_from_64byte_request(const uint8_t *reque
 void v2_response_header_hton(response_header_v2_t *header);
 void v2_response_header_ntoh(response_header_v2_t *header);
 #pragma endregion RESPONSE_HEADER_V2
+
+response_header_v0_t v2_response_header_to_v0(response_header_v2_t v2response);

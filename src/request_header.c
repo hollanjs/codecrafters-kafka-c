@@ -1,5 +1,7 @@
 #include "request_header.h"
 
+#include <stdio.h>
+
 #pragma region RESPONSE_HEADER_V0
 response_header_v0_t v0_response_header_new(uint32_t message_size, uint32_t correlation_id)
 {
@@ -52,6 +54,13 @@ uint32_t v0_response_get_message_size(response_header_v0_t *header)
 }
 #pragma endregion RESPONSE_HEADER_V0
 
+response_header_v0_t v2_response_header_to_v0(response_header_v2_t v2response)
+{
+    response_header_v0_t v0response = v0_response_header_new(v2response.message_size,
+                                                             v2response.correlation_id);
+    return v0response;
+}
+
 #pragma region RESPONSE_HEADER_V2
 response_header_v2_t v2_response_header_new(uint32_t message_size,
                                             uint32_t correlation_id,
@@ -71,21 +80,28 @@ response_header_v2_t v2_response_header_new(uint32_t message_size,
 response_header_v2_t v2_response_header_from_64byte_request(const uint8_t *request)
 {
     response_header_v2_t v2_response_header;
-    int _offset = 0;
-    // const uint8_t *requestLE = nto
+    uint32_t message_size;
+    uint32_t correlation_id;
+    uint16_t request_api_key;
+    uint16_t request_api_version;
 
-    memcpy(&(v2_response_header.message_size), request, sizeof(v2_response_header.message_size));
+    int _offset = 0;
+
+    memcpy(&message_size, &request[_offset], sizeof(v2_response_header.message_size));
     _offset += sizeof(v2_response_header.message_size);
 
-    memcpy(&(v2_response_header.correlation_id), request, sizeof(v2_response_header.correlation_id));
-    _offset += sizeof(v2_response_header.correlation_id);
-
-    memcpy(&(v2_response_header.request_api_key), request, sizeof(v2_response_header.request_api_key));
+    memcpy(&request_api_key, &request[_offset], sizeof(v2_response_header.request_api_key));
     _offset += sizeof(v2_response_header.request_api_key);
 
-    memcpy(&(v2_response_header.request_api_version), request, sizeof(v2_response_header.request_api_version));
+    memcpy(&request_api_version, &request[_offset], sizeof(v2_response_header.request_api_version));
+    _offset += sizeof(v2_response_header.request_api_version);
 
-    // v2_response_header_ntoh(&v2_response_header);
+    memcpy(&correlation_id, &request[_offset], sizeof(v2_response_header.correlation_id));
+
+    v2_response_header = v2_response_header_new(message_size, correlation_id, request_api_key, request_api_version);
+
+    v2_response_header_ntoh(&v2_response_header);
+
     return v2_response_header;
 }
 

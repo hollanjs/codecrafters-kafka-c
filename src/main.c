@@ -9,6 +9,7 @@
 #include <stdint.h>
 
 #include "request_header.h"
+#include "troubleshooting.h"
 
 int main(int argc, char *argv[])
 {
@@ -71,9 +72,13 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
+	// hex_dump(buffer, sizeof(buffer));
 	response_header_v2_t response = v2_response_header_from_64byte_request(buffer);
-	v2_response_header_hton(&response);
-	if (send(client_fd, &response.correlation_id, sizeof(response.correlation_id), 0) < 0)
+	response_header_v0_t v0response = v2_response_header_to_v0(response);
+	v0_response_header_hton(&v0response);
+
+	if (v0response._endianness == LITTLE ||
+		send(client_fd, &v0response.header_v0.message_header, sizeof(&v0response.header_v0.message_header), 0) < 0)
 	{
 		printf("Sending to client failed");
 		return 1;
