@@ -71,10 +71,9 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	response_header_v0_t response = v0_response_header_new(0, 7);
-	v0_response_header_to_network(&response);
-	printf("%d\n%d\n", response.header_v0.parts.message_size, response.header_v0.parts.correlation_id);
-	if (send(client_fd, &response.header_v0.message_header, sizeof(response.header_v0.message_header), 0) < 0)
+	response_header_v2_t response = response_header_v2_t(buffer)
+		v2_response_header_hton(&response);
+	if (send(client_fd, &response.correlation_id, sizeof(response.header_v0.message_header), 0) < 0)
 	{
 		printf("Sending to client failed");
 		return 1;
